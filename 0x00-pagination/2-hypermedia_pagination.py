@@ -68,11 +68,12 @@ class Server:
             List[Dict] : List of items in the requested page
         """
         result = self.get_page(page, page_size)
+        total_pages = self.dataset()
         return {
             "page_size": len(result),
             "page": page,
             "data": result,
-            "next_page": page + 1 if page < len(result) else None,
-            "prev_page": page - 1,
-            "total_pages": len(self.dataset()) // page_size
+            "next_page": page + 1 if page < len(total_pages) else None,
+            "prev_page": page - 1 if page > 1 else None,
+            "total_pages": len(total_pages) // page_size
         }
