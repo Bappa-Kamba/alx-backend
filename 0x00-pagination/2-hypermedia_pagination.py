@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import csv
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 
 class Server:
@@ -38,7 +38,8 @@ class Server:
         start, end = self.index_range(page, page_size)
         result = self.dataset()
         return result[start:end] \
-            if start < len(result) \
+            if start < len(result) or \
+            end > len(result) \
             else []
 
     def index_range(self, page: int, page_size: int) -> Tuple[int, int]:
@@ -55,3 +56,23 @@ class Server:
         start_index = (page - 1) * page_size
         end_index = page * page_size
         return (start_index, end_index)
+
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
+        """ Get the requested page of the dataset
+
+        Args:
+            page: int - page number
+            page_size: int - number of items per page
+
+        Returns:
+            List[Dict] : List of items in the requested page
+        """
+        result = self.get_page(page, page_size)
+        return {
+            "page_size": len(result),
+            "page": page,
+            "data": result,
+            "next_page": page + 1 if page < len(result) else None,
+            "prev_page": page - 1,
+            "total_pages": len(self.dataset()) // page_size
+        }
