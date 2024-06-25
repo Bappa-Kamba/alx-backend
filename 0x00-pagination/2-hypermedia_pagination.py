@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Hypermedia pagination """
 import csv
 from typing import List, Tuple, Dict
 
@@ -68,12 +69,25 @@ class Server:
             List[Dict] : List of items in the requested page
         """
         result = self.get_page(page, page_size)
-        total_pages = self.dataset()
+        total_items = len(self.__dataset)
+        total_pages = (total_items + page_size - 1) // page_size
+
         return {
             "page_size": len(result),
             "page": page,
             "data": result,
-            "next_page": page + 1 if page < len(total_pages) else None,
+            "next_page": page + 1 if page < total_pages else None,
             "prev_page": page - 1 if page > 1 else None,
-            "total_pages": len(total_pages) // page_size
+            "total_pages": total_pages
         }
+
+
+server = Server()
+
+print(server.get_hyper(1, 2))
+print("---")
+print(server.get_hyper(2, 2))
+print("---")
+print(server.get_hyper(100, 3))
+print("---")
+print(server.get_hyper(3000, 100))
