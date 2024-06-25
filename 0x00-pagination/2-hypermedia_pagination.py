@@ -80,14 +80,3 @@ class Server:
             "prev_page": page - 1 if page > 1 else None,
             "total_pages": total_pages
         }
-
-
-server = Server()
-
-print(server.get_hyper(1, 2))
-print("---")
-print(server.get_hyper(2, 2))
-print("---")
-print(server.get_hyper(100, 3))
-print("---")
-print(server.get_hyper(3000, 100))
